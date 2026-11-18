@@ -1,0 +1,20 @@
+name: daily-log
+on:
+  schedule:
+    - cron: "30 3 * * *"   # every day at 03:30 UTC = 09:00 IST
+  workflow_dispatch:        # lets you run it by hand from the Actions tab
+permissions:
+  contents: write
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add today's entry and commit
+        run: |
+          echo "- $(TZ=Asia/Kolkata date '+%Y-%m-%d %H:%M IST')" >> log.md
+          git config user.name "Aditya kumar jha"
+          git config user.email "139031943+Adityakumarjha087@users.noreply.github.com"
+          git add log.md
+          git commit -m "Daily log $(TZ=Asia/Kolkata date +%Y-%m-%d)"
+          git push
